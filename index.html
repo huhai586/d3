@@ -1,96 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<canvas width="960" height="500"></canvas>
+<meta charset="utf-8">
+<style>
 
-<script src="./d3.js"></script>
-<p></p>
-<p></p>
+    .arc text {
+        font: 10px sans-serif;
+        text-anchor: middle;
+    }
 
+    .arc path {
+        stroke: #fff;
+    }
+
+</style>
+<svg width="960" height="500" id="aa"></svg>
+<canvas id="myCanvas" width="500" height="300" style="border:1px solid #d3d3d3;background:#ffffff;">
+    Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="./saveSvgAsPng.js"></script>
 <script>
 
-    var canvas = document.querySelector("canvas"),
-        context = canvas.getContext("2d");
+    var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height"),
+        radius = Math.min(width, height) / 2,
+        g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
-        width = canvas.width - margin.left - margin.right,
-        height = canvas.height - margin.top - margin.bottom;
+    var color = d3.scaleOrdinal(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-    var x = d3.scaleBand()
-        .rangeRound([0, width])
-        .padding(0.5);
+    var pie = d3.pie()
+        .sort(null)
+        .value(function(d) { return d.population; });
 
-    var y = d3.scaleLinear()
-        .rangeRound([height, 0]);
+    var path = d3.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(0);
 
-    context.translate(margin.left, margin.top);
-    d3.tsv("data.tsv", function(d) {
-        d.frequency = +d.frequency;
-        d.name="胡海";
+    var label = d3.arc()
+        .outerRadius(radius - 40)
+        .innerRadius(radius - 40);
+
+    d3.csv("./data.csv", function(d) {
+        d.population = +d.population;
         return d;
     }, function(error, data) {
         if (error) throw error;
 
-        x.domain(data.map(function(d) { return d.letter; }));
-        y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+        var arc = g.selectAll(".arc")
+            .data(pie(data))
+            .enter().append("g")
+            .attr("class", "arc");
 
-        var yTickCount = 10,
-            yTicks = y.ticks(yTickCount),
-            yTickFormat = y.tickFormat(yTickCount, "%");
+        arc.append("path")
+            .attr("d", path)
+            .attr("fill", function(d) { return color(d.data.age); });
 
-        context.beginPath();
-        x.domain().forEach(function(d) {
-            context.moveTo(x(d) + x.bandwidth() / 2, height);
-            context.lineTo(x(d) + x.bandwidth() / 2, height + 6);
-        });
-        context.strokeStyle = "black";
-        context.stroke();
-
-        context.textAlign = "center";
-        context.textBaseline = "top";
-        x.domain().forEach(function(d) {
-            context.fillText(d, x(d) + x.bandwidth() / 2, height + 6);
-        });
-
-        context.beginPath();
-        yTicks.forEach(function(d) {
-            context.moveTo(0, y(d) + 0.5);
-            context.lineTo(-6, y(d) + 0.5);
-        });
-        context.strokeStyle = "black";
-        context.stroke();
-
-        context.textAlign = "right";
-        context.textBaseline = "middle";
-        yTicks.forEach(function(d) {
-            context.fillText(yTickFormat(d), -9, y(d));
-        });
-
-        context.beginPath();
-        context.moveTo(-6.5, 0 + 0.5);
-        context.lineTo(0.5, 0 + 0.5);
-        context.lineTo(0.5, height + 0.5);
-        context.lineTo(-6.5, height + 0.5);
-        context.strokeStyle = "black";
-        context.stroke();
-
-        context.save();
-        context.rotate(-Math.PI / 2);
-        context.textAlign = "right";
-        context.textBaseline = "top";
-        context.font = "bold 10px sans-serif";
-        context.fillText("Frequency", -10, 10);
-        context.restore();
-
-        context.fillStyle = "steelblue";
-        data.forEach(function(d) {
-            context.fillRect(x(d.letter), y(d.frequency), x.bandwidth(), height - y(d.frequency));
-        });
+        arc.append("text")
+            .attr("transform", function(d) { return "translate(" + label.centroid(d) + ")"; })
+            .attr("dy", "0.35em")
+            .text(function(d) { return d.data.age; });
     });
+
 </script>
-</body>
-</html>
+
+
+<script>
+    $(document).ready(function () {
+        $("#aa").click(function () {
+            //
+            svgAsDataUri(document.getElementById("aa"), 1, function (uri) {
+
+                var image = new Image();
+                image.src = uri ;
+
+                image.onload=function(){
+                    var canvas = document.createElement('canvas');
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    var context = canvas.getContext('2d');
+                    context.drawImage(image, 0, 0);
+
+
+                    var imgDataUri = canvas.toDataURL('image/png');
+                    var a = document.createElement('a');
+                    a.download = "image.png";
+                    a.href = imgDataUri;
+//                    document.body.appendChild(a);
+                    a.click();
+
+                };
+
+
+
+            });
+
+
+        })
+    })
+</script>
