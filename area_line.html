@@ -87,7 +87,7 @@ html{
 
         color.domain([0,1]);
 
-        y.domain([0, 20+d3.max(data, function(d) { return d.close; })]);
+        y.domain([0, 10+d3.max(data, function(d) { return d.close; })]);
 
         area.y0(y(0));
         area.curve(d3.curveCatmullRom.alpha(0.5));
