@@ -179,6 +179,43 @@ console.log(allProviences)
       .attr('stroke','#5f8aa7')
       .attr('stroke-width','2')
 
+    //line left
+    aimDot.append("line")
+      .attr('x1',proPeking[0]-10)
+      .attr('y1',proPeking[1])
+      .attr('x2',proPeking[0]-70)
+      .attr('y2',proPeking[1])
+      .attr('stroke','#6388a1')
+      .attr('stroke-width','3')
+
+    //line right
+    aimDot.append("line")
+      .attr('x1',proPeking[0]+10)
+      .attr('y1',proPeking[1])
+      .attr('x2',proPeking[0]+70)
+      .attr('y2',proPeking[1])
+      .attr('stroke','#6388a1')
+      .attr('stroke-width','3')
+
+    //line up
+    aimDot.append("line")
+      .attr('x1',proPeking[0])
+      .attr('y1',proPeking[1]-10)
+      .attr('x2',proPeking[0])
+      .attr('y2',proPeking[1]-70)
+      .attr('stroke','#6388a1')
+      .attr('stroke-width','3')
+    //line down
+    aimDot.append("line")
+      .attr('class','down')
+      .attr('x1',proPeking[0])
+      .attr('y1',proPeking[1]+10)
+      .attr('x2',proPeking[0])
+      .attr('y2',proPeking[1]+70)
+      .attr('stroke','#6388a1')
+      .attr('stroke-width','3')
+
+
 
 
 
