@@ -1,0 +1,121 @@
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>range</title>
+</head>
+<style>
+    html{
+        background: #000;
+    }
+    .province {
+        stroke: black;
+        stroke-width: 1px;
+    }
+
+    .southsea {
+        stroke: black;
+        stroke-width: 1px;
+        fill: #ccc;
+    }
+
+    .valueText {
+        font-family: arial;
+        font-size: 12px;
+        text-anchor: middle;
+    }
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://d3js.org/topojson.v1.min.js" charset="utf-8"></script>
+<svg width="700" height="700">
+    <defs>
+        <filter id="glow">
+            <feGaussianBlur class="blur" stdDeviation="15.5" result="coloredBlur"></feGaussianBlur><feMerge><feMergeNode in="coloredBlur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs>
+
+</svg>
+<script>
+
+  var width = 700,
+    height = 700;
+
+  var svg = d3.select("svg")
+
+
+  var projection = d3.geo.mercator()
+    .center([107, 31])
+    .scale(600)
+    .translate([width/2, height/2]);
+
+  var path = d3.geo.path()
+    .projection(projection);
+
+
+  d3.json("china.topojson", function(error, toporoot) {
+    if (error)
+      return console.error(error);
+
+    //输出china.topojson的对象
+    console.log(toporoot);
+
+    //将TopoJSON对象转换成GeoJSON，保存在georoot中
+    var georoot = topojson.feature(toporoot,toporoot.objects.china);
+
+    //输出GeoJSON对象
+    console.log(georoot);
+
+    //
+    var southeast = d3.set([
+      "广东", "海南", "福建", "浙江", "江西",
+      "江苏", "台湾", "上海", "香港", "澳门"
+    ]);
+    //所有省份
+//    var georoot = topojson.feature(toporoot,toporoot.objects.china);
+    //合并东南各省
+    var allProviences=[];
+    var mergePolygon = topojson.merge(toporoot, toporoot.objects.china.geometries
+      .filter(function (d) {
+        return true
+        allProviences.push(d.properties.name)
+          return southeast.has(d.properties.name); //只有集合中名字相称的省份才会留下，其他会被filter过滤
+        }
+      ));
+
+
+console.log(allProviences)
+    //包含中国各省路径的分组元素
+    var china = svg.append("g");
+
+
+
+    //绘制东南各省
+    china.append("path")
+      .datum(mergePolygon)
+      .attr("class","XXXXXXX")
+      .style("fill","#adfdff")  //用蓝色标注
+      .style("filter",  "url(#glow)")
+      .attr("stroke","#adffff")
+      .attr("stroke-width",4)
+
+    .attr("d",path);
+    //添加中国各种的路径元素
+    var provinces = china.append("g").selectAll("path")
+      .data( georoot.features )
+      .enter()
+      .append("path")
+      .attr("class","province11")
+      .style("fill", "#34495f")
+      .style("fill-opcity", "0.5")
+      .attr("d", path );
+
+
+  });
+
+
+
+
+
+</script>
+
+</body>
+</html>  

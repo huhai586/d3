@@ -89,7 +89,7 @@
         if (error) throw error;
         x.domain(data.map(function(d) { return d.date; }));
         color.domain([0,1]);
-        y.domain([0, d3.max(data, function(d) { return d.close; })]);
+        y.domain([0, 1.2*d3.max(data, function(d) { return d.close; })]);
         area.y0(y(0));
         area.curve(d3.curveCatmullRom.alpha(0.5));
         line.curve(d3.curveCatmullRom.alpha(0.5));
@@ -143,7 +143,7 @@
             .style("fill", function(d) { return "white"; });
 
         //
-        g.selectAll(".domain").style("display","none")
+        g.selectAll(".domain").remove()
 
         initBar(y)
     });
@@ -154,7 +154,7 @@
             return d
         },function(error,data){
             x_bar.domain(data.map(function(d) { return d.letter; }));
-            y_bar.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+            y_bar.domain([0, 1.2*d3.max(data, function(d) { return d.frequency; })]);
 
             g.append("g")
                 .attr("class","bar_block")
@@ -164,7 +164,9 @@
                 .enter().append("rect")
                 .attr("class", "bar")
                 .attr("x", function(d) { return x_bar(d.letter); })
+                .attr("rx", 5)
                 .attr("y", function(d) { return y_bar(d.frequency); })
+                .attr("ry", 5)
                 .attr("width", x_bar.bandwidth())
                 .attr("height", function(d) { return height - y_bar(d.frequency); });
 
