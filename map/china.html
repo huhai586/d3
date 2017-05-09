@@ -6,7 +6,7 @@
 </head>
 <style>
     html{
-        background: #000;
+        background: #0e1320;
     }
     .province {
         stroke: black;
@@ -31,7 +31,13 @@
 <svg width="700" height="700">
     <defs>
         <filter id="glow">
-            <feGaussianBlur class="blur" stdDeviation="15.5" result="coloredBlur"></feGaussianBlur><feMerge><feMergeNode in="coloredBlur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs>
+            <feGaussianBlur class="blur" stdDeviation="25.5" result="coloredBlur" filterUnits="userSpaceOnUse"></feGaussianBlur>
+            <feMerge>
+                <feMergeNode in="coloredBlur"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
 
 </svg>
 <script>
@@ -50,6 +56,10 @@
   var path = d3.geo.path()
     .projection(projection);
 
+
+
+  var peking = [104, 30.9];
+  var proPeking = projection(peking);
 
   d3.json("china.topojson", function(error, toporoot) {
     if (error)
@@ -88,14 +98,15 @@ console.log(allProviences)
 
 
 
-    //绘制东南各省
+    //绘制东南各省()
     china.append("path")
       .datum(mergePolygon)
-      .attr("class","XXXXXXX")
-      .style("fill","#adfdff")  //用蓝色标注
+      .attr("class","border")
+      .style("fill","#b7efff")  //用蓝色标注
+//      .style("fill-opacity","0")  //用蓝色标注
       .style("filter",  "url(#glow)")
       .attr("stroke","#adffff")
-      .attr("stroke-width",4)
+      .attr("stroke-width",3)
 
     .attr("d",path);
     //添加中国各种的路径元素
@@ -106,7 +117,69 @@ console.log(allProviences)
       .attr("class","province11")
       .style("fill", "#34495f")
       .style("fill-opcity", "0.5")
-      .attr("d", path );
+      .attr("d", path )
+        .attr("stroke","#adffff")
+        .attr("stroke-width",0.5);
+
+    //rend dot
+    var dotG=svg.append("g").attr("class","dots")
+    dotG.append("circle")
+      .attr("class","point")
+      .attr("cx",proPeking[0])
+      .attr("cy",proPeking[1])
+      .attr("r",6)
+      .attr("fill","#426787")
+
+    dotG.append("circle")
+      .attr("class","point")
+      .attr("cx",proPeking[0])
+      .attr("cy",proPeking[1])
+      .attr("r",3)
+      .attr("fill","#97d8ff");
+
+    // aim dot
+    var aimDot=svg.append("g").attr("class","aimDot")
+    aimDot.selectAll(".aim").remove()
+    // brightingest circle
+    aimDot.append("circle")
+      .attr("class","point")
+      .attr("cx",proPeking[0])
+      .attr("cy",proPeking[1])
+      .attr("r",6)
+      .attr("fill","#b3eeff")
+    // circle inner
+
+    aimDot.append("circle")
+      .attr("class","point")
+      .attr("cx",proPeking[0])
+      .attr("cy",proPeking[1])
+      .attr("r",20)
+      .attr("fill","none")
+      .attr('stroke','#72accb')
+      .attr('stroke-width','2')
+      .attr('stroke-dasharray','7,2')
+    // middle inner
+
+    aimDot.append("circle")
+      .attr("class","point")
+      .attr("cx",proPeking[0])
+      .attr("cy",proPeking[1])
+      .attr("r",30)
+      .attr("fill","none")
+      .attr('stroke','#89d5fa')
+      .attr('stroke-width','2')
+    // middle inner
+
+    aimDot.append("circle")
+      .attr("class","point")
+      .attr("cx",proPeking[0])
+      .attr("cy",proPeking[1])
+      .attr("r",50)
+      .attr("fill","none")
+      .attr('stroke','#5f8aa7')
+      .attr('stroke-width','2')
+
+
 
 
   });
