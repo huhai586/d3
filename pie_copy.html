@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        width: 960px;
+        height: 500px;
+        position: relative;
+    }
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    path.slice{
+        stroke-width:2px;
+    }
+
+    polyline{
+        /*opacity: .3;*/
+        /*stroke: black;*/
+        stroke-width: 2px;
+        fill: none;
+    }
+
+</style>
+<body>
+<svg class="h">
+    <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+
+            <stop offset="0%" style="stop-color:rgb(57,103,131);stop-opacity:0.1" />
+
+            <stop offset="100%" style="stop-color:rgb(165,243,253);stop-opacity:1" />
+
+        </linearGradient>
+    </defs>
+</svg>
+<button class="randomize">randomize</button>
+
+<script src="http://d3js.org/d3.v3.js"></script>
+<script>
+
+    var svg = d3.select("svg.h")
+        .append("g")
+
+    svg.append("g")
+        .attr("class", "slices");
+    svg.append("g")
+        .attr("class", "labels");
+    svg.append("g")
+        .attr("class", "lines");
+    svg.append("g")
+        .attr("class", "dots");
+
+    var width = 960,
+        height = 450,
+        radius = Math.min(width, height) / 2;
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function(d) {
+            return d.value;
+        });
+
+    var arc = d3.svg.arc()
+        .outerRadius(radius * 0.8)
+        .innerRadius(radius * 0.7)
+        .cornerRadius(5)
+        .padAngle(0.01);
+
+    var outerArc = d3.svg.arc()
+        .innerRadius(radius * 0.9)
+        .outerRadius(radius * 0.9);
+    var arcForLine=d3.svg.arc()
+        .innerRadius(radius * 0.8)
+        .outerRadius(radius * 0.8);
+
+    svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var key = function(d){ return d.data.label; };
+
+    var color = d3.scale.ordinal()
+        .domain(["Lorem ipsum","ersrsr","hu","hai","why","this","is","confuse"])
+        .range(["red", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+    function randomData (){
+        var labels = color.domain();
+        return labels.map(function(label){
+            return { label: label, value: Math.random() }
+        });
+    }
+
+    change(randomData());
+
+    d3.select(".randomize")
+        .on("click", function(){
+            change(randomData());
+        });
+
+
+    function change(data) {
+      var arc = d3.svg.arc()
+        .innerRadius(72)
+        .outerRadius(72)
+        .startAngle(0)
+        .endAngle(2*Math.PI);
+
+        /* ------- PIE SLICES -------*/
+        var slice = svg.select(".slices").insert("path").attr("d",arc())
+          .attr("fill","none")
+          .attr("stroke-width","10")
+          .attr("stroke", "url(#grad1)")
+
+
+
+    };
+
+</script>
+</body>

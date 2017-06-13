@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="flexible" content="initial-dpr=0.5" />
+
+    <script src="http://g.tbcdn.cn/mtb/lib-flexible/0.3.4/??flexible_css.js,flexible.js"></script>
+</head>
+<body>
+<div id="text"></div>
+<script>
+    function show(){
+      var s = "";
+      s += " 网页正文全文宽："+ document.body.scrollWidth+"<br/>";
+      s += " 网页正文全文高："+ document.body.scrollHeight+"<br/>";
+      s += " 屏幕分辨率的高："+ window.screen.height+"<br/>";
+      s += " 屏幕分辨率的宽："+ window.screen.width+"<br/>";
+      s += " 屏幕倍数："+ window.devicePixelRatio +"<br/>";
+      s += " 网页可见区域宽："+ document.body.clientWidth+"<br/>";
+      s += " 网页可见区域高："+ document.body.clientHeight+"<br/>";
+      s += " 网页可见区域宽："+ document.body.offsetWidth + " (包括边线和滚动条的宽)"+"<br/>";
+      s += " 网页可见区域高："+ document.body.offsetHeight + " (包括边线的宽)"+"<br/>";
+      s += " 屏幕可用工作区高度："+ window.screen.availHeight+"<br/>";
+      s += " 屏幕可用工作区宽度："+ window.screen.availWidth+"<br/>";
+      s += "网络类型:" + navigator.onLine + "<br/>";
+
+      document.getElementById("text").innerHTML=s;
+    }
+
+    window.onload=show;
+    window.onresize=show
+</script>
+</body>
+</html>

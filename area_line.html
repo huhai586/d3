@@ -32,7 +32,7 @@ html{
     color: #F00;
 }
 </style>
-<script src="./d3.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
 
 
@@ -48,8 +48,8 @@ html{
 
     var x = d3.scaleBand()
         .range([0, width])
-        .paddingInner(0.7)
-        .paddingOuter(0.5)
+      .padding(0.5)
+      .align(0.5);
 
 
     var color = d3.scaleLinear()
